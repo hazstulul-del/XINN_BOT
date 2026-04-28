@@ -1,0 +1,12 @@
+{
+  "name": "xinngpt-web",
+  "version": "1.0.0",
+  "description": "XINN GPT - AI Chat Web mirip DeepSeek",
+  "main": "api/chat.js",
+  "scripts": {
+    "dev": "vercel dev"
+  },
+  "dependencies": {
+    "axios": "^1.6.0"
+  }
+}
