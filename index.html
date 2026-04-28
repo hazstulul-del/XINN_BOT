@@ -2,74 +2,166 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>XINN GPT - AI Chat</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>DeepSek - AI Chat</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
 </head>
 <body>
-  <div class="app">
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <div class="sidebar-header">
-        <div class="logo">
-          <span class="logo-icon">🤖</span>
-          <span class="logo-text">XINN GPT</span>
-        </div>
+  <!-- Overlay -->
+  <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo" onclick="closeSidebar()">
+        <span class="logo-icon">🧠</span>
+        <span>DeepSek</span>
       </div>
-      <button class="new-chat-btn" onclick="newChat()">
-        <span>+</span> New Chat
+    </div>
+    <button class="new-chat-btn" onclick="newChat()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+      New Chat
+    </button>
+    <div class="history-label">Riwayat Chat</div>
+    <div class="chat-list" id="chatList"></div>
+  </aside>
+
+  <!-- Main Chat -->
+  <main class="main">
+    <!-- Top Bar -->
+    <header class="topbar">
+      <button class="menu-btn" onclick="openSidebar()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
       </button>
-      <div class="chat-history" id="chatHistory"></div>
-      <div class="sidebar-footer">
-        <div class="user-info">
-          <div class="avatar">B</div>
-          <span>Bang User</span>
+      <div class="topbar-title">DeepSek</div>
+      <div style="width:24px"></div>
+    </header>
+
+    <!-- Chat Container -->
+    <div class="chat-container" id="chatContainer">
+      <!-- Welcome -->
+      <div class="welcome" id="welcomeScreen">
+        <div class="welcome-logo">🧠</div>
+        <h1>Halo, Bang! Gue DeepSek AI.</h1>
+        <p>Asisten paling santai, receh, dan siap bantu lo kapan aja.</p>
+        <div class="suggestions">
+          <button onclick="quickAsk('Bikinin script bot Telegram dong')">💻 Bikinin script</button>
+          <button onclick="quickAsk('Roasting gua dong')">🔥 Roasting</button>
+          <button onclick="quickAsk('Kasih gombalan maut')">💘 Gombalan</button>
+          <button onclick="quickAsk('Jelaskan cara kerja AI')">🧠 Belajar AI</button>
         </div>
       </div>
-    </aside>
+      
+      <!-- Messages -->
+      <div class="messages" id="messages"></div>
+    </div>
 
-    <!-- Main Chat Area -->
-    <main class="main">
-      <div class="chat-container" id="chatContainer">
-        <!-- Welcome Message -->
-        <div class="welcome" id="welcome">
-          <div class="welcome-icon">🤖</div>
-          <h1>Halo, Bang! Gue XINN BOT.</h1>
-          <p>AI asisten paling santai, receh, dan siap bantu lo kapan aja.</p>
-          <div class="suggestions">
-            <button onclick="sendSuggestion('Bikinin script bot Telegram dong')">💻 Bikinin script</button>
-            <button onclick="sendSuggestion('Roasting gua dong')">🔥 Roasting</button>
-            <button onclick="sendSuggestion('Kasih gombalan maut')">💘 Gombalan</button>
-            <button onclick="sendSuggestion('Jelaskan apa itu AI')">🧠 Belajar AI</button>
-          </div>
-        </div>
-        
-        <!-- Messages -->
-        <div class="messages" id="messages"></div>
+    <!-- Input Area -->
+    <div class="input-area">
+      <div class="input-box">
+        <textarea id="userInput" rows="1" placeholder="Ketik pesan, Bang..." onkeydown="handleKey(event)"></textarea>
+        <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
+        </button>
       </div>
+      <p class="disclaimer">DeepSek AI bisa aja salah. Cek info penting ya, Bang.</p>
+    </div>
+  </main>
 
-      <!-- Input Area -->
-      <div class="input-area">
-        <div class="input-wrapper">
-          <textarea 
-            id="userInput" 
-            placeholder="Ketik pesan, Bang..." 
-            rows="1"
-            onkeydown="handleKeyDown(event)"
-          ></textarea>
-          <button class="send-btn" id="sendBtn" onclick="sendMessage()">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M22 2L11 13"></path>
-              <path d="M22 2L15 22L11 13L2 9L22 2Z"></path>
-            </svg>
-          </button>
-        </div>
-        <p class="disclaimer">XINN GPT bisa aja salah. Cek info penting ya, Bang.</p>
-      </div>
-    </main>
-  </div>
+  <script>
+    let isWaiting = false;
 
-  <script src="script.js"></script>
+    function openSidebar() {
+      document.getElementById('sidebar').classList.add('open');
+      document.getElementById('overlay').classList.add('show');
+    }
+    function closeSidebar() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('overlay').classList.remove('show');
+    }
+
+    function newChat() {
+      document.getElementById('messages').innerHTML = '';
+      document.getElementById('welcomeScreen').style.display = 'flex';
+      closeSidebar();
+    }
+
+    function quickAsk(text) {
+      document.getElementById('userInput').value = text;
+      sendMessage();
+    }
+
+    function handleKey(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    }
+
+    async function sendMessage() {
+      const input = document.getElementById('userInput');
+      const msg = input.value.trim();
+      if (!msg || isWaiting) return;
+      
+      isWaiting = true;
+      input.value = '';
+      input.style.height = 'auto';
+      document.getElementById('sendBtn').disabled = true;
+      document.getElementById('welcomeScreen').style.display = 'none';
+      
+      addBubble('user', msg);
+      const loadId = addTyping();
+      
+      try {
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: msg })
+        });
+        const data = await res.json();
+        removeTyping(loadId);
+        addBubble('ai', data.reply);
+      } catch (e) {
+        removeTyping(loadId);
+        addBubble('ai', 'Server error, Bang. Coba lagi.');
+      }
+      
+      isWaiting = false;
+      document.getElementById('sendBtn').disabled = false;
+      input.focus();
+    }
+
+    function addBubble(role, text) {
+      const msgs = document.getElementById('messages');
+      const div = document.createElement('div');
+      div.className = `bubble ${role}`;
+      div.innerHTML = text.replace(/```(\w*)\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>').replace(/\n/g, '<br>');
+      msgs.appendChild(div);
+      div.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function addTyping() {
+      const msgs = document.getElementById('messages');
+      const div = document.createElement('div');
+      div.className = 'bubble ai typing';
+      div.id = 'typing-' + Date.now();
+      div.innerHTML = '<span></span><span></span><span></span>';
+      msgs.appendChild(div);
+      div.scrollIntoView({ behavior: 'smooth' });
+      return div.id;
+    }
+
+    function removeTyping(id) {
+      const el = document.getElementById(id);
+      if (el) el.remove();
+    }
+
+    // Auto-resize
+    document.getElementById('userInput').addEventListener('input', function() {
+      this.style.height = 'auto';
+      this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+    });
+  </script>
 </body>
 </html>
