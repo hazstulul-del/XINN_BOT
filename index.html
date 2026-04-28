@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XINN GPT - AI Chat</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
+</head>
+<body>
+  <div class="app">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <span class="logo-icon">🤖</span>
+          <span class="logo-text">XINN GPT</span>
+        </div>
+      </div>
+      <button class="new-chat-btn" onclick="newChat()">
+        <span>+</span> New Chat
+      </button>
+      <div class="chat-history" id="chatHistory"></div>
+      <div class="sidebar-footer">
+        <div class="user-info">
+          <div class="avatar">B</div>
+          <span>Bang User</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Chat Area -->
+    <main class="main">
+      <div class="chat-container" id="chatContainer">
+        <!-- Welcome Message -->
+        <div class="welcome" id="welcome">
+          <div class="welcome-icon">🤖</div>
+          <h1>Halo, Bang! Gue XINN BOT.</h1>
+          <p>AI asisten paling santai, receh, dan siap bantu lo kapan aja.</p>
+          <div class="suggestions">
+            <button onclick="sendSuggestion('Bikinin script bot Telegram dong')">💻 Bikinin script</button>
+            <button onclick="sendSuggestion('Roasting gua dong')">🔥 Roasting</button>
+            <button onclick="sendSuggestion('Kasih gombalan maut')">💘 Gombalan</button>
+            <button onclick="sendSuggestion('Jelaskan apa itu AI')">🧠 Belajar AI</button>
+          </div>
+        </div>
+        
+        <!-- Messages -->
+        <div class="messages" id="messages"></div>
+      </div>
+
+      <!-- Input Area -->
+      <div class="input-area">
+        <div class="input-wrapper">
+          <textarea 
+            id="userInput" 
+            placeholder="Ketik pesan, Bang..." 
+            rows="1"
+            onkeydown="handleKeyDown(event)"
+          ></textarea>
+          <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 2L11 13"></path>
+              <path d="M22 2L15 22L11 13L2 9L22 2Z"></path>
+            </svg>
+          </button>
+        </div>
+        <p class="disclaimer">XINN GPT bisa aja salah. Cek info penting ya, Bang.</p>
+      </div>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
