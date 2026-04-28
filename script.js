@@ -1,55 +1,79 @@
+// ===== SIDEBAR =====
+function openSidebar() {
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('overlay').classList.add('show');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+}
+
+// ===== ATTACHMENT MENU =====
+function openAttachmentMenu() {
+  document.getElementById('attachmentMenu').style.display = 'block';
+}
+function closeAttachmentMenu() {
+  document.getElementById('attachmentMenu').style.display = 'none';
+}
+
+// ===== PAGE SWITCH =====
+function switchPage(pageId) {
+  ['chatContainer','docsPage','albumPage','fotoPage'].forEach(id => document.getElementById(id).style.display = 'none');
+  document.getElementById('inputArea').style.display = 'none';
+  
+  if (pageId === 'chatContainer') {
+    document.getElementById('chatContainer').style.display = 'flex';
+    document.getElementById('inputArea').style.display = 'block';
+  } else {
+    document.getElementById(pageId).style.display = 'block';
+  }
+}
+
+// ===== CHAT =====
 let isWaiting = false;
 
-function handleKeyDown(e) {
+function newChat() {
+  document.getElementById('messages').innerHTML = '';
+  document.getElementById('welcome').style.display = 'flex';
+  switchPage('chatContainer');
+  closeSidebar();
+}
+
+function quickAsk(text) {
+  switchPage('chatContainer');
+  document.getElementById('userInput').value = text;
+  sendMessage();
+}
+
+function handleKey(e) {
   if (e.key === 'Enter' && !e.shiftKey) {
     e.preventDefault();
     sendMessage();
   }
 }
 
-function newChat() {
-  document.getElementById('messages').innerHTML = '';
-  document.getElementById('welcome').style.display = 'block';
-}
-
-function sendSuggestion(text) {
-  document.getElementById('userInput').value = text;
-  sendMessage();
-}
-
 async function sendMessage() {
   const input = document.getElementById('userInput');
-  const message = input.value.trim();
-  
-  if (!message || isWaiting) return;
+  const msg = input.value.trim();
+  if (!msg || isWaiting) return;
   
   isWaiting = true;
   input.value = '';
+  input.style.height = 'auto';
   document.getElementById('sendBtn').disabled = true;
-  
-  // Sembunyikan welcome
   document.getElementById('welcome').style.display = 'none';
   
-  // Tampilkan pesan user
-  addMessage('user', message);
-  
-  // Tampilkan typing indicator
-  const typingId = showTyping();
+  addBubble('user', msg);
+  const typingId = addTyping();
   
   try {
-    const response = await fetch('/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message })
-    });
-    
-    const data = await response.json();
+    const res = await fetch('/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: msg }) });
+    const data = await res.json();
     removeTyping(typingId);
-    addMessage('ai', data.reply);
-    
-  } catch (error) {
+    addBubble('ai', data.reply || 'Error, Bang.');
+  } catch (e) {
     removeTyping(typingId);
-    addMessage('ai', 'Waduh, koneksi error nih Bang. Coba lagi ya. 🥲');
+    addBubble('ai', 'Server error, Bang. Coba lagi.');
   }
   
   isWaiting = false;
@@ -57,55 +81,47 @@ async function sendMessage() {
   input.focus();
 }
 
-function addMessage(role, text) {
-  const messages = document.getElementById('messages');
+function addBubble(role, text) {
+  const msgs = document.getElementById('messages');
   const div = document.createElement('div');
-  div.className = `message ${role}`;
+  div.className = `bubble ${role}`;
   
-  const avatar = role === 'ai' ? '🤖' : '👤';
+  // Format code blocks dengan tombol copy
+  let html = text
+    .replace(/```(\w*)\n([\s\S]*?)```/g, (match, lang, code) => {
+      const cleanCode = code.trimEnd();
+      return `<pre><div class="copy-btn" onclick="copyCode(this)">Copy</div><code class="language-${lang}">${cleanCode}</code></pre>`;
+    })
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/\n/g, '<br>');
   
-  div.innerHTML = `
-    <div class="message-avatar">${avatar}</div>
-    <div class="message-content">${formatMessage(text)}</div>
-  `;
-  
-  messages.appendChild(div);
+  div.innerHTML = html;
+  msgs.appendChild(div);
   div.scrollIntoView({ behavior: 'smooth' });
 }
 
-function formatMessage(text) {
-  // Format code blocks
-  text = text.replace(/```(\w*)\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>');
-  text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
-  text = text.replace(/\n/g, '<br>');
-  return text;
+function copyCode(btn) {
+  const code = btn.parentElement.querySelector('code').innerText;
+  navigator.clipboard.writeText(code).then(() => {
+    btn.innerText = 'Copied!';
+    setTimeout(() => btn.innerText = 'Copy', 1500);
+  });
 }
 
-function showTyping() {
-  const messages = document.getElementById('messages');
+function addTyping() {
+  const msgs = document.getElementById('messages');
   const div = document.createElement('div');
-  div.className = 'message ai';
+  div.className = 'bubble ai typing';
   div.id = 'typing-' + Date.now();
-  div.innerHTML = `
-    <div class="message-avatar">🤖</div>
-    <div class="message-content">
-      <div class="typing-indicator">
-        <span></span><span></span><span></span>
-      </div>
-    </div>
-  `;
-  messages.appendChild(div);
+  div.innerHTML = '<span></span><span></span><span></span>';
+  msgs.appendChild(div);
   div.scrollIntoView({ behavior: 'smooth' });
   return div.id;
 }
 
-function removeTyping(id) {
-  const el = document.getElementById(id);
-  if (el) el.remove();
-}
+function removeTyping(id) { const el = document.getElementById(id); if (el) el.remove(); }
 
-// Auto-resize textarea
 document.getElementById('userInput').addEventListener('input', function() {
   this.style.height = 'auto';
-  this.style.height = Math.min(this.scrollHeight, 150) + 'px';
+  this.style.height = Math.min(this.scrollHeight, 120) + 'px';
 });
