@@ -2,128 +2,73 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>XINN AI</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
 </head>
 <body>
-  <!-- OVERLAY -->
-  <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
 
-  <!-- SIDEBAR (RIWAYAT CHAT) -->
+<div class="app">
   <aside class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-      <div class="sidebar-logo">🧠 XINN AI</div>
-      <button class="sidebar-close" onclick="closeSidebar()">✕</button>
+    <div class="side-head">
+      <b>XINN AI</b>
+      <button id="closeSide">×</button>
     </div>
-    <button class="new-chat-btn" onclick="newChat()">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
-      New Chat
-    </button>
-    <div class="history-label">Riwayat Chat</div>
-    <div class="chat-list" id="chatList">
-      <div class="chat-item active" onclick="newChat()">💬 Chat Baru</div>
-    </div>
-    <div class="sidebar-footer">
-      <div class="user-card">
-        <div class="user-avatar">B</div>
-        <span>Bang User</span>
-      </div>
-    </div>
+
+    <button id="newChat" class="new-chat">+ Chat Baru</button>
+    <input id="searchHistory" class="search" placeholder="Cari chat...">
+    <div id="historyList" class="history"></div>
   </aside>
 
-  <!-- MAIN CONTENT -->
   <main class="main">
-    <!-- TOPBAR -->
     <header class="topbar">
-      <button class="menu-btn" onclick="openSidebar()">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg>
-      </button>
-      <div class="topbar-title" id="topbarTitle">XINN AI</div>
-      <button class="new-btn" onclick="newChat()" title="Obrolan Baru">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
-      </button>
+      <button id="menuBtn" class="top-btn">☰</button>
+      <h1>XINN AI</h1>
+
+      <div class="top-actions">
+        <button id="themeBtn" class="top-btn">🌙</button>
+        <button id="panelBtn" class="top-btn">◨</button>
+      </div>
     </header>
 
-    <!-- CHAT CONTAINER -->
-    <div class="chat-container" id="chatContainer">
-      <div class="welcome" id="welcome">
-        <div class="welcome-logo">🧠</div>
-        <h1>Halo, Bang! Gue XINN AI.</h1>
-        <p>Asisten AI paling santai, receh, dan jago ngoding.</p>
-        <div class="suggestions">
-          <button onclick="quickAsk('Bikinin script bot Telegram dong Bang')">💻 Bikinin script</button>
-          <button onclick="quickAsk('Roasting gua dong Bang')">🔥 Roasting</button>
-          <button onclick="quickAsk('Kasih gombalan maut dong')">💘 Gombalan</button>
-          <button onclick="quickAsk('Jelaskan cara kerja AI, Bang')">🧠 Belajar AI</button>
-        </div>
-      </div>
-      <div class="messages" id="messages"></div>
-    </div>
+    <section id="chatArea" class="chat-area"></section>
 
-    <!-- DOKUMEN PAGE -->
-    <div class="page-container" id="docsPage" style="display:none;">
-      <div class="page-header">
-        <h2>📁 Dokumen</h2>
-        <button class="upload-btn" onclick="alert('Upload dokumen!')">+ Upload</button>
+    <section class="bottom">
+      <div class="tools">
+        <button id="thinkBtn">🧠 Deep Think (R1)</button>
+        <button id="searchBtn">🌐 Search</button>
       </div>
-      <div class="doc-card" onclick="alert('Buka Proposal.pdf')"><span class="doc-icon">📄</span><div class="doc-info"><strong>Proposal.pdf</strong><small>2.4 MB</small></div></div>
-      <div class="doc-card" onclick="alert('Buka Laporan.docx')"><span class="doc-icon">📄</span><div class="doc-info"><strong>Laporan.docx</strong><small>1.8 MB</small></div></div>
-    </div>
 
-    <!-- ALBUM PAGE -->
-    <div class="page-container" id="albumPage" style="display:none;">
-      <div class="page-header">
-        <h2>🖼️ Album</h2>
-        <button class="upload-btn" onclick="alert('Buat album baru!')">+ Buat</button>
-      </div>
-      <div class="grid-2col">
-        <div class="album-card-main" onclick="alert('Liburan')">🏖️<br>Liburan</div>
-        <div class="album-card-main" onclick="alert('Keluarga')">👨‍👩‍👧‍👦<br>Keluarga</div>
-      </div>
-    </div>
-
-    <!-- FOTO PAGE -->
-    <div class="page-container" id="fotoPage" style="display:none;">
-      <div class="page-header">
-        <h2>📸 Foto</h2>
-        <button class="upload-btn" onclick="alert('Upload foto!')">+ Upload</button>
-      </div>
-      <div class="grid-2col">
-        <div class="foto-card-main" onclick="alert('Lihat foto')">🌅</div>
-        <div class="foto-card-main" onclick="alert('Lihat foto')">🌊</div>
-        <div class="foto-card-main" onclick="alert('Lihat foto')">🏔️</div>
-        <div class="foto-card-main" onclick="alert('Lihat foto')">🌃</div>
-      </div>
-    </div>
-
-    <!-- INPUT AREA -->
-    <div class="input-area" id="inputArea">
       <div class="input-box">
-        <button class="input-btn plus-btn" onclick="openAttachmentMenu()" title="Tambah">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
-        </button>
-        <textarea id="userInput" rows="1" placeholder="Ketik pesan atau tahan untuk bicara" onkeydown="handleKey(event)"></textarea>
-        <button class="input-btn send-btn-icon" onclick="sendMessage()" id="sendBtn" title="Kirim">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
-        </button>
-      </div>
-      <p class="disclaimer">XINN AI bisa aja salah. Cek info penting ya, Bang.</p>
-    </div>
+        <button id="plusBtn" class="plus">+</button>
 
-    <!-- ATTACHMENT MENU (POPUP) -->
-    <div class="attachment-menu" id="attachmentMenu" style="display:none;">
-      <div class="attachment-overlay" onclick="closeAttachmentMenu()"></div>
-      <div class="attachment-popup">
-        <button onclick="switchPage('docsPage'); closeAttachmentMenu();">📁 Dokumen</button>
-        <button onclick="switchPage('albumPage'); closeAttachmentMenu();">🖼️ Album</button>
-        <button onclick="switchPage('fotoPage'); closeAttachmentMenu();">📸 Foto</button>
-        <button onclick="alert('Upload file!'); closeAttachmentMenu();">📤 Upload File</button>
+        <div id="uploadMenu" class="upload-menu">
+          <button id="photoBtn">🖼️ Foto</button>
+          <button id="cameraBtn">📷 Kamera</button>
+          <button id="docBtn">📄 Dokumen</button>
+        </div>
+
+        <input id="photoInput" type="file" hidden multiple accept="image/*">
+        <input id="cameraInput" type="file" hidden accept="image/*" capture="environment">
+        <input id="docInput" type="file" hidden multiple accept=".pdf,.doc,.docx,.txt,.zip,.rar,.js,.html,.css,.json">
+
+        <textarea id="messageInput" placeholder="Kirim pesan ke XINN AI..."></textarea>
+        <button id="sendBtn" class="send">➜</button>
       </div>
-    </div>
+
+      <p>XINN AI bisa membuat kesalahan. Periksa info penting.</p>
+    </section>
   </main>
 
-  <script src="script.js"></script>
+  <aside id="rightPanel" class="right-panel hide">
+    <div class="panel-head">
+      <b>Preview</b>
+      <button id="closePanel">×</button>
+    </div>
+    <pre><code>console.log("XINN AI Ready");</code></pre>
+  </aside>
+</div>
+
+<script src="script.js"></script>
 </body>
-      </html>
+</html>
