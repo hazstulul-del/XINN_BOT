@@ -2,71 +2,66 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>XINN AI</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
 </head>
 <body>
 
 <div class="app">
+  <!-- SIDEBAR -->
   <aside class="sidebar" id="sidebar">
     <div class="side-head">
-      <b>XINN AI</b>
+      <b>🧠 XINN AI</b>
       <button id="closeSide">×</button>
     </div>
-
     <button id="newChat" class="new-chat">+ Chat Baru</button>
     <input id="searchHistory" class="search" placeholder="Cari chat...">
     <div id="historyList" class="history"></div>
   </aside>
 
   <main class="main">
+    <!-- HEADER -->
     <header class="topbar">
       <button id="menuBtn" class="top-btn">☰</button>
-      <h1>XINN AI</h1>
-
-      <div class="top-actions">
-        <button id="themeBtn" class="top-btn">🌙</button>
-        <button id="panelBtn" class="top-btn">◨</button>
-      </div>
+      <b>XINN AI</b>
+      <button id="themeBtn" class="top-btn">🌙</button>
     </header>
 
-    <section id="chatArea" class="chat-area"></section>
-
-    <section class="bottom">
-      <div class="tools">
-        <button id="thinkBtn">🧠 Deep Think (R1)</button>
-        <button id="searchBtn">🌐 Search</button>
+    <!-- CHAT AREA -->
+    <section id="chatArea" class="chat-area">
+      <div class="welcome-screen" id="welcomeScreen">
+        <h2>Halo Bang! Gue XINN AI 🧠</h2>
+        <p>Asisten AI paling santai, receh, jago ngoding, dan siap bantu lo kapan aja.</p>
+        <div class="prompt-suggestions">
+          <button onclick="quickAsk('Bikinin script bot Telegram dong Bang')">💻 Bikinin script</button>
+          <button onclick="quickAsk('Roasting gua dong')">🔥 Roasting</button>
+          <button onclick="quickAsk('Kasih gombalan maut')">💘 Gombalan</button>
+          <button onclick="quickAsk('Jelaskan cara kerja AI')">🧠 Belajar AI</button>
+        </div>
       </div>
+      <div class="messages" id="messages"></div>
+    </section>
 
+    <!-- INPUT AREA -->
+    <div class="input-area">
       <div class="input-box">
-        <button id="plusBtn" class="plus">+</button>
-
+        <button id="plusBtn" class="plus-btn">+</button>
         <div id="uploadMenu" class="upload-menu">
           <button id="photoBtn">🖼️ Foto</button>
           <button id="cameraBtn">📷 Kamera</button>
           <button id="docBtn">📄 Dokumen</button>
         </div>
-
         <input id="photoInput" type="file" hidden multiple accept="image/*">
         <input id="cameraInput" type="file" hidden accept="image/*" capture="environment">
-        <input id="docInput" type="file" hidden multiple accept=".pdf,.doc,.docx,.txt,.zip,.rar,.js,.html,.css,.json">
-
-        <textarea id="messageInput" placeholder="Kirim pesan ke XINN AI..."></textarea>
-        <button id="sendBtn" class="send">➜</button>
+        <input id="docInput" type="file" hidden multiple accept=".pdf,.doc,.docx,.txt">
+        <textarea id="messageInput" rows="1" placeholder="Ketik pesan, Bang..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage();}"></textarea>
+        <button id="sendBtn" class="send-btn" onclick="sendMessage()">➤</button>
       </div>
-
-      <p>XINN AI bisa membuat kesalahan. Periksa info penting.</p>
-    </section>
-  </main>
-
-  <aside id="rightPanel" class="right-panel hide">
-    <div class="panel-head">
-      <b>Preview</b>
-      <button id="closePanel">×</button>
+      <p class="disclaimer">XINN AI bisa aja salah. Cek info penting ya, Bang.</p>
     </div>
-    <pre><code>console.log("XINN AI Ready");</code></pre>
-  </aside>
+  </main>
 </div>
 
 <script src="script.js"></script>
