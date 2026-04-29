@@ -1,9 +1,7 @@
 {
-  "name": "deepsek-spa",
-  "version": "3.0.0",
+  "name": "xinngpt-web",
+  "version": "2.0.0",
   "main": "api/chat.js",
   "scripts": { "dev": "vercel dev" },
-  "dependencies": {
-    "groq-sdk": "^0.5.0"
-  }
+  "dependencies": { "groq-sdk": "^0.5.0" }
 }
